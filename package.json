@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/cforlando/EventParking-API#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.1",
     "request": "^2.83.0"
   }

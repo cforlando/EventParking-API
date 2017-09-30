@@ -4,8 +4,13 @@ var express = require('express');
 var config = require('./config');
 var timer = require('timers');
 var fileSystem = require('fs');
+var bodyParser = require('body-parser');
+
 
 var app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
 const port = config.port;
 const dataRequestInterval = config.dataRequestInterval;
 
@@ -33,14 +38,8 @@ function eventParking(date) {
     var json = JSON.parse(contents);
 
     var month = date.getMonth() + 1;
-    var day = date.getDate();
+    var day = date.getDate() + 1;
     var year = date.getFullYear();
-
-    console.log("Date: ", date);
-    console.log("Year: ", year);
-    console.log("Month: ", month);
-    console.log("Day: ", day);
-    console.log("JSON: ",json);
 
     if (year == json.year) {
         console.log("Year matches");
@@ -49,15 +48,9 @@ function eventParking(date) {
             if (json.days.indexOf(day) > -1) {
                 console.log("Day matches");
                 return true
-            } else {
-                console.log("Day doesn't match");
-            }
-        } else {
-            console.log("Month doesn't match");
+            } 
         }
-    } else {
-        console.log("Year doesn't match");
-    }
+    } 
 
     return false
 }
@@ -66,13 +59,14 @@ app.get('/', (request, response) => {
     response.send('This is not the end point you are looking for.');
 });
 
-app.post('/events', (request, response, body) => {
+app.post('/events', (request, response) => {
     // Build some json body.
 
     var success = false;
-    console.log("body: ", body.parameters.date);
-    if (body.date) {
-        success = eventParking(new Date(body.date));
+    var date = request.body.parameters.date;
+    
+    if (date) {
+        success = eventParking(new Date(date));
     } else {
         success = eventParking(new Date());
     }
@@ -82,8 +76,6 @@ app.post('/events', (request, response, body) => {
     } else {
         response.send("No, there isn't any event parking.");
     }
-
-    
 });
 
 app.post('/action', (request, response, body) => {

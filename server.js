@@ -46,6 +46,19 @@ app.post('/events', (request, response, body) => {
 
 });
 
+app.post('/action', (request, response, body) => {
+
+    var response = {
+      "speech" : "Yes this is working",
+      "displayText" : "Yes, this is absolutely working",
+      "data" : {},
+      "contextOut" : [],
+      "source" : "EventParkingApi"
+    }
+
+    response.send(response)
+});
+
 app.listen(port, (error) => {
     if (error) {
         return console.log('something really bad happened. There is fire, someone soiled themself... ', error);

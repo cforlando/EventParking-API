@@ -1,10 +1,28 @@
-request = require('request');
-express = require('express');
-config = require('./config');
-timer = require('timers');
+'use strict';
+var request = require('request');
+var express = require('express');
+var config = require('./config');
+var timer = require('timers');
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+
+// Load certs
+var privateKey  = fs.readFileSync('all/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('all/cert.pem', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
 
 var app = express();
 const port = config.port;
+// your express configuration here
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(8080);
+httpsServer.listen(8443);
+
+
 const dataRequestInterval = config.dataRequestInterval;
 
 function requestData(callback) {
@@ -17,13 +35,13 @@ function updateDatabase(data) {
     // remove old data
 }
 
-function watcher() {
+function startWatcher() {
     // Loop to periodically request data
     setInterval(() => {
         requestData((data) => {
             updateDatabase(data);
         });
-    }, dataRequestInterval);
+    }, dataRequestInterval); // This will fire every two weeks.
 }
 
 app.get('/', (request, response) => {
@@ -46,10 +64,3 @@ app.post('/events', (request, response, body) => {
 
 });
 
-app.listen(port, (error) => {
-    if (error) {
-        return console.log('something really bad happened. There is fire, someone soiled themself... ', error);
-    }
-
-    console.log(`server is listening on ${port}`);
-});

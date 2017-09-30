@@ -71,11 +71,19 @@ app.post('/events', (request, response) => {
         success = eventParking(new Date());
     }
 
-    if (success) {
-        response.send("Yes, there is event parking.");
-    } else {
-        response.send("No, there isn't any event parking.");
+    var actionResponse = {
+      "speech" : "Yes this is working",
+      "displayText" : "Yes, this is absolutely working",
+      "source" : "EventParkingApi"
     }
+
+    if (success) {
+        actionResponse.speech = "Yes, there is event parking.";
+    } else {
+        actionResponse.speech = "No, there isn't any event parking.";
+    }
+
+    response.send(actionResponse);
 });
 
 app.post('/action', (request, response, body) => {

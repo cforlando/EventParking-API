@@ -32,11 +32,14 @@ function eventParking(date) {
     var contents = fileSystem.readFileSync("dates.json");
     var json = JSON.parse(contents);
 
-    var month = date.month;
-    var day = date.date;
-    var year = date.year;
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var year = date.getFullYear();
 
-    console.log("Date: ",date);
+    console.log("Date: ", date);
+    console.log("Year: ", year);
+    console.log("Month: ", month);
+    console.log("Day: ", day);
     console.log("JSON: ",json);
 
     if (year == json.year) {
@@ -63,10 +66,16 @@ app.get('/', (request, response) => {
     response.send('This is not the end point you are looking for.');
 });
 
-app.post('/events', (request, response) => {
+app.post('/events', (request, response, body) => {
     // Build some json body.
-    
-    var success = eventParking(Date.now());
+
+    var success = false;
+    console.log("body: ", body.parameters.date);
+    if (body.date) {
+        success = eventParking(new Date(body.date));
+    } else {
+        success = eventParking(new Date());
+    }
 
     if (success) {
         response.send("Yes, there is event parking.");

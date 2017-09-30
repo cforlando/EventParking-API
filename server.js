@@ -60,5 +60,7 @@ app.post('/action', (request, response, body) => {
 });
 
 app.listen(port, (error) => {
-    console.log("Something gone broke: ", error);
+    if (error) {
+        console.log("Something gone broke: ", error);
+    }
 });

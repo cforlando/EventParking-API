@@ -33,23 +33,17 @@ function startWatcher() {
     }, dataRequestInterval); // This will fire every two weeks.
 }
 
-function eventParking(date) {
+function eventDates() {
     var contents = fileSystem.readFileSync("dates.json");
     var json = JSON.parse(contents);
+    return json;
+}
 
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    var year = date.getFullYear();
-
-    if (year == json.year) {
-        console.log("Year matches");
-        if (month == json.month) {
-            console.log("Month matches");
-            if (json.days.indexOf(day) > -1) {
-                console.log("Day matches");
-                return true
-            } 
-        }
+function eventParking(date) {
+    var isoString = date.toISOString().split('T')[0];
+    if (eventDates().indexOf(isoString) > -1) {
+        console.log("Day matches");
+        return true
     } 
 
     return false
@@ -80,12 +74,18 @@ app.post('/events', (request, response) => {
 
     if (success) {
         actionResponse.speech = "Yes, there is event parking.";
+        actionResponse.displayText = "Yes";
     } else {
         actionResponse.speech = "No, there isn't any event parking.";
+        actionResponse.displayText = "No";
     }
 
     response.send(actionResponse);
 });
+
+app.get('/events', (request, response) => {
+    response.send(eventDates());
+})
 
 app.post('/action', (request, response, body) => {
 

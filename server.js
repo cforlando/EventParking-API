@@ -8,22 +8,24 @@ var http = require('http');
 var https = require('https');
 
 // Load certs
-var privateKey  = fs.readFileSync('all/privkey.pem', 'utf8');
-var certificate = fs.readFileSync('all/cert.pem', 'utf8');
-
+var privateKey  = fs.readFileSync('server/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('server/cert.pem', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
 var app = express();
 const port = config.port;
+const dataRequestInterval = config.dataRequestInterval;
 // your express configuration here
 var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(8080);
-httpsServer.listen(8443);
-
-
-const dataRequestInterval = config.dataRequestInterval;
+httpServer.listen(8080, (request, response) => {
+    console.log("http server started");
+    
+});
+httpsServer.listen(8443, (request, response) => {
+    console.log("https server started");
+});
 
 function requestData(callback) {
     callback("some data");
@@ -62,5 +64,16 @@ app.get('/events', (request, response) => {
 
 app.post('/events', (request, response, body) => {
 
+});
+
+app.post('/action', (request, response, body) => {
+
+    var actionResponse = {
+      "speech" : "Yes this is working",
+      "displayText" : "Yes, this is absolutely working",
+      "source" : "EventParkingApi"
+    }
+
+    response.send(actionResponse);
 });
 

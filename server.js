@@ -63,8 +63,8 @@ app.post('/events', (request, response) => {
     // Build some json body.
 
     var success = false;
-    console.log(request.body.parameters);
-    var date = request.body.parameters.date;
+    console.log(request.body.result.parameters);
+    var date = request.body.result.parameters.date;
     
     if (date) {
         success = eventParking(new Date(date));

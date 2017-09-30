@@ -3,7 +3,7 @@ var request = require('request');
 var express = require('express');
 var config = require('./config');
 var timer = require('timers');
-var fs = require('fs');
+var fileSystem = require('fs');
 
 var app = express();
 const port = config.port;
@@ -32,20 +32,25 @@ app.get('/', (request, response) => {
     response.send('This is not the end point you are looking for.');
 });
 
-app.get('/events', (request, response) => {
+app.post('/events', (request, response) => {
     // Build some json body.
-    var events = {
-        "Pine St" : {
-            "start" : "2017-10-06T17:30:00",
-            "end" : "2017-10-07T00:30:00",
-            "cost" : 11
+    var contents = fileSystem.readFileSync("dates.json");
+    var json = JSON.parse(contents);
+
+    var today = Date.now();
+    var month = 10;//today.month;
+    var day = 31;//today.date;
+    var year = today.year;
+
+    if (year == json.year) {
+        if (month == json.month) {
+            if (json.days.indexOf(day) > -1) {
+                response.send("Yes, there is event parking.");
+            }
         }
     }
-    response.send(events);
-});
 
-app.post('/events', (request, response, body) => {
-
+    response.send("No, there isn't any event parking.");
 });
 
 app.post('/action', (request, response, body) => {

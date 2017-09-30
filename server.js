@@ -38,7 +38,7 @@ function eventParking(date) {
     var json = JSON.parse(contents);
 
     var month = date.getMonth() + 1;
-    var day = date.getDate() + 1;
+    var day = date.getDate();
     var year = date.getFullYear();
 
     if (year == json.year) {

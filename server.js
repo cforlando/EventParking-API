@@ -63,6 +63,7 @@ app.post('/events', (request, response) => {
     // Build some json body.
 
     var success = false;
+    console.log(request.body.parameters);
     var date = request.body.parameters.date;
     
     if (date) {

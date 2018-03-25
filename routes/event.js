@@ -3,7 +3,6 @@ const Router = require('express-promise-router');
 
 const db = require('../db');
 
-
 // create a new express-promise-router
 // this has the same API as the normal express router except
 // it allows you to use async functions as route handlers
@@ -14,6 +13,9 @@ module.exports = router;
 
 
 router.use('/:year/:month/:day', async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
     const year = req.params.year;
     const month = req.params.month;
     const day = req.params.day;

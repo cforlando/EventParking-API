@@ -24,7 +24,7 @@ router.use('/:year/:month/:day', async (req, res) => {
     const sql = "SELECT * FROM events WHERE (start_date BETWEEN '" + date + "' AND '" + nextDate + "') OR (end_date BETWEEN '" + date + "' AND '" + nextDate + "') OR ('" + date + "' BETWEEN start_date AND end_date);";
 
     logger.info("Requested: " + date);
-    logger.info("SQL: " + date);
+    logger.info("SQL: " + sql);
     const { rows } = await db.query(sql);
     res.send(rows);
 });

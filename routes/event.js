@@ -30,9 +30,9 @@ router.use('/:year/:month/:day', async (req, res) => {
 });
 
 function getNextDate(year, month, day) {
+    let monthIndex = parseInt(month) - 1;
 
-    let nextDay = new Date();
-    nextDay.setDate(new Date(year, month - 1, day).getDate() + 1);
+    let nextDay = new Date(year, monthIndex, (parseInt(day) + 1));
 
     return nextDay.getFullYear() + '/' + (nextDay.getMonth() + 1) + '/' + nextDay.getDate();
 }

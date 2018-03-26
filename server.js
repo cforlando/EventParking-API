@@ -3,6 +3,7 @@
 const express = require('express');
 const mountRoutes = require('./routes');
 const config = require('./config');
+global.__basedir = __dirname;
 
 const app = express();
 mountRoutes(app);

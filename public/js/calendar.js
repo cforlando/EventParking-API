@@ -1,6 +1,6 @@
 const $ = require('jquery');
-const moment = require('moment');
 require('fullcalendar');
+const moment = require('moment');
 const months = [];
 const defferedAjax = [];
 const events = [];
@@ -41,26 +41,6 @@ async function initEvents() {
     $.when.apply($, defferedAjax).then(() => {
         loadCalendar()
     });
-
-    months.push(thisMonth);
-}
-
-async function getMoreEvents() {
-    if (months.indexOf(thisMonth) === -1) {
-        const daysThisMonth = getDaysInMonth(thisMonth, thisYear);
-        for (let i = 1; i < daysThisMonth; ++i) {
-            defferedAjax.push(
-                $.ajax({
-                    dataType: "json",
-                    url: 'https://event-parking-api.herokuapp.com/event/' + thisYear + '/' + thisMonth + '/' + i
-                }).then(addEvents)
-            );
-        }
-        $.when.apply($, defferedAjax).then(() => {
-            console.log(events);
-            calendar.fullCalendar('refetchEventSources', events);
-        })
-    }
 
     months.push(thisMonth);
 }

@@ -17,9 +17,9 @@ module.exports = {
     getEventsByMonth: getEventsByMonth,
 };
 
-router.use('/:year/:month/:day', async (req, res) => {getEventsByDay(req, res)});
-
-router.use('/:year/:month', async (req, res) => {getEventsByMonth(req, res)});
+// router.use('/:year/:month/:day', async (req, res) => {getEventsByDay(req, res)});
+//
+// router.use('/:year/:month', async (req, res) => {getEventsByMonth(req, res)});
 
 function getEventsByDay(request, response) {
     setCorsHeaders(response);

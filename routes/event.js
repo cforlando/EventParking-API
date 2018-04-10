@@ -21,7 +21,7 @@ router.use('/:year/:month/:day', getEventsByDay);
 
 router.use('/:year/:month', getEventsByMonth);
 
-async function getEventsByDay(request, response) {
+function getEventsByDay(request, response) {
     setCorsHeaders(response);
 
     const year = request.params.year;
@@ -36,7 +36,7 @@ async function getEventsByDay(request, response) {
     db.query(sql).then((rows) => {response.send(rows)});
 }
 
-async function getEventsByMonth(request, response) {
+function getEventsByMonth(request, response) {
     setCorsHeaders(response);
 
     const year = request.params.year;

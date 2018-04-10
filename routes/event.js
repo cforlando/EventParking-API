@@ -17,11 +17,11 @@ module.exports = {
     getEventsByMonth: getEventsByMonth,
 };
 
-router.use('/:year/:month/:day', async (req, res) => {getEventsByDay(req, res)});
+router.use('/:year/:month/:day', async (req, res) => {getEventsByDay(req, res).then()});
 
-router.use('/:year/:month', async (req, res) => {getEventsByMonth(req, res)});
+router.use('/:year/:month', async (req, res) => {getEventsByMonth(req, res).then()});
 
-function getEventsByDay(request, response) {
+async function getEventsByDay(request, response) {
     setCorsHeaders(response);
 
     const year = request.params.year;
@@ -36,7 +36,7 @@ function getEventsByDay(request, response) {
     db.query(sql).then((rows) => {response.send(rows)});
 }
 
-function getEventsByMonth(request, response) {
+async function getEventsByMonth(request, response) {
     setCorsHeaders(response);
 
     const year = request.params.year;

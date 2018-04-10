@@ -1,7 +1,6 @@
 let assert = require('assert');
 const index = require('../routes/index');
 const event = require('../routes/event');
-const calendar = require('../routes/calendar');
 const root = require('../routes/root');
 
 class mockApp {
@@ -11,10 +10,7 @@ class mockApp {
 function mockUse(location, object) {
     switch (location) {
         case '/event':
-            assert.equal(object, event, 'event route');
-            break;
-        case '/calendar':
-            assert.equal(object, calendar, 'calendar route');
+            assert.equal(object, event.router, 'event route');
             break;
         case '/*':
             assert.equal(object, root, 'root route');

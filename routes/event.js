@@ -9,16 +9,24 @@ const db = require('../db');
 const router = new Router();
 
 // export our router to be mounted by the parent application
-module.exports = router;
+module.exports = {
+    router: router,
+    getEndOfMonth: getEndOfMonth,
+    getNextDate: getNextDate,
+    getEventsByDay: getEventsByDay,
+    getEventsByMonth: getEventsByMonth,
+};
 
+router.use('/:year/:month/:day', getEventsByDay);
 
-router.use('/:year/:month/:day', async (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+router.use('/:year/:month', getEventsByMonth);
 
-    const year = req.params.year;
-    const month = req.params.month;
-    const day = req.params.day;
+async function getEventsByDay(request, response) {
+    setCorsHeaders(response);
+
+    const year = request.params.year;
+    const month = request.params.month;
+    const day = request.params.day;
     const date = year + '/' + month + '/' + day;
     const nextDate = getNextDate(year, month, day);
     const sql = "SELECT * FROM events WHERE (start_date BETWEEN '" + date + "' AND '" + nextDate + "') OR (end_date BETWEEN '" + date + "' AND '" + nextDate + "') OR ('" + date + "' BETWEEN start_date AND end_date);";
@@ -26,15 +34,14 @@ router.use('/:year/:month/:day', async (req, res) => {
     logger.info("Requested Day: " + date);
     logger.info("SQL: " + sql);
     const { rows } = await db.query(sql);
-    res.send(rows);
-});
+    response.send(rows);
+}
 
-router.use('/:year/:month', async (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+async function getEventsByMonth(request, response) {
+    setCorsHeaders(response);
 
-    const year = req.params.year;
-    const month = req.params.month;
+    const year = request.params.year;
+    const month = request.params.month;
     const date = year + '/' + month + '/01';
     const endOfMonth = getEndOfMonth(year, month);
     const sql = "SELECT * FROM events WHERE (start_date BETWEEN '" + date + "' AND '" + endOfMonth + "') OR (end_date BETWEEN '" + date + "' AND '" + endOfMonth + "') OR ('" + date + "' BETWEEN start_date AND end_date);";
@@ -42,8 +49,15 @@ router.use('/:year/:month', async (req, res) => {
     logger.info("Requested Month: " + date);
     logger.info("SQL: " + sql);
     const { rows } = await db.query(sql);
-    res.send(rows);
-});
+    response.send(rows);
+}
+
+function setCorsHeaders(response) {
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+    return response;
+}
 
 function getEndOfMonth(year, month) {
     const end = new Date(year, month, 0);

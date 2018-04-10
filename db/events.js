@@ -8,18 +8,21 @@ module.exports = {
 
 async function addEvents(events) {
     logger.info('Run Query Started');
+    let message = '';
     for (let k = 0; k < events.length; ++k) {
         let sql = getEventInsertFunction(events, k);
 
         logger.info('Sql == ' + sql);
 
         await db.query(sql).then(function (res) {
+            message = 'Success';
             logger.info('Added: ' + events[k]['event_id'] + ' :: ' + events[k]['title']);
         }).catch(function (err) {
+            message = null;
             logger.error("Could Not Add: " + events[k]['event_id'] + ' :: ' + events[k]['title']);
         });
     }
-    return 'Done';
+    return events;
 }
 
 function getEventInsertFunction(events, k) {

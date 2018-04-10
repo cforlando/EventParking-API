@@ -33,8 +33,7 @@ async function getEventsByDay(request, response) {
 
     logger.info("Requested Day: " + date);
     logger.info("SQL: " + sql);
-    const { rows } = await db.query(sql);
-    response.send(rows);
+    db.query(sql).then((rows) => {response.send(rows)});
 }
 
 async function getEventsByMonth(request, response) {
@@ -48,8 +47,7 @@ async function getEventsByMonth(request, response) {
 
     logger.info("Requested Month: " + date);
     logger.info("SQL: " + sql);
-    const { rows } = await db.query(sql);
-    response.send(rows);
+    db.query(sql).then((rows) => {response.send(rows)});
 }
 
 function setCorsHeaders(response) {

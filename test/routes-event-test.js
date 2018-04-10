@@ -18,7 +18,7 @@ function mockRouterReqHeader(value, value2) {
 }
 
 async function mockRouterReqSend(value) {
-    await assert.equal(typeof(value), 'mock_db_query_successful', 'Check that mocked query value sent as response');
+    assert.equal(value, 'mock_db_query_successful', 'Check that mocked query value sent as response');
 }
 
 // Tests
